@@ -1,12 +1,36 @@
 body {
 	font-family: 'Open Sans', sans-serif;
+	color: #EDEDED;
 	background-image: url("../images/low_contrast_linen_bg.png");
 }
 
 #title {
 	font-family: 'Lobster', cursive;
-	color: #EDEDE1;
 	font-size:80px;
 	text-align: center;
 	margin: 20px 0 0 0;
+}
+
+.header {
+	font-size: 26px;
+	text-align: center;
+}
+
+input.user-input {
+	margin: auto;
+}
+
+div.input-column {
+	/*margin: 20px 0 0 0;*/
+}
+
+div.input-group {
+	margin: 20px 0 30px 0;
+}
+
+div#map {
+	margin: 20px 0 0 0;
+	background-color: white;
+	height: 640px;
+	/*width: 600px;*/
 }

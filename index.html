@@ -2,12 +2,15 @@
 	<head>
 		<title>Pathmapr</title>
 
+		<!-- Reset -->
+		<!-- <link rel="stylesheet" type="text/css" href="css/reset.css"> -->
+
 		<!-- Skeleton Grid -->
+		<link rel="stylesheet" type="text/css" href="css/base.css">
 		<link rel="stylesheet" type="text/css" href="css/skeleton.css">
 		<link rel="stylesheet" type="text/css" href="css/layout.css">
 
 		<!-- Custom Styles -->
-		<link rel="stylesheet" type="text/css" href="css/reset.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 
 		<!-- Google Web Fonts -->
@@ -17,7 +20,26 @@
 		<div class="container" id="container">
 			<div id="title" class="sixteen columns">Pathmapr</div>
 
-			
+			<div class="five columns input-column">
+				<div class="input-group">
+					<h1 class="header">Where are you?</h1>
+					<form action="" id="user-location-form">
+						<input type="text" name="user-location" class="user-input">
+					</form>
+				</div>
+
+				<div class="input-group">
+					<h1 class="header">Where are you going?</h1>
+					<form action="" id="user-destination-form">
+						<input type="text" class="user-input" name="user-location">
+					</form>
+				</div>
+			</div>
+
+			<div class="eleven columns" id="map">
+				
+			</div>
+
 		</div>
 	</body>
 </html>
