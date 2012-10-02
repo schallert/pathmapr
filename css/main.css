@@ -1,7 +1,7 @@
 body {
 	font-family: 'Open Sans', sans-serif;
-	color: #EDEDED;
-	background-image: url("../images/low_contrast_linen_bg.png");
+	color: #24AEED;
+	background-image: url("../images/fabric_plaid.png");
 }
 
 #title {
@@ -17,7 +17,8 @@ body {
 }
 
 input.user-input {
-	margin: auto;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 div.input-column {
@@ -33,4 +34,13 @@ div#map {
 	background-color: white;
 	height: 640px;
 	/*width: 600px;*/
+}
+
+div.submit {
+	width: 100%;
+	text-align: center;
+}
+
+input#submit-input {
+	margin: auto;
 }
