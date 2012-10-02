@@ -1,0 +1,12 @@
+body {
+	font-family: 'Open Sans', sans-serif;
+	background-image: url("../images/low_contrast_linen_bg.png");
+}
+
+#title {
+	font-family: 'Lobster', cursive;
+	color: #EDEDE1;
+	font-size:80px;
+	text-align: center;
+	margin: 20px 0 0 0;
+}
