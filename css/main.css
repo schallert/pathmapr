@@ -16,27 +16,41 @@ body {
 	text-align: center;
 }
 
-input.user-input {
-	margin-left: auto;
-	margin-right: auto;
-}
-
-div.input-column {
-	/*margin: 20px 0 0 0;*/
-}
-
-div.input-group {
-	margin: 20px 0 30px 0;
-}
-
-div#map {
+div#map_canvas {
 	margin: 20px 0 0 0;
 	background-color: white;
 	height: 640px;
 	/*width: 600px;*/
 }
 
+/* Input Styles */
+
+div.input-group {
+	margin: 20px 0 30px 0;
+}
+
+div.dest-input-group {
+	float: left;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+input.user-input {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+input.dest-input {
+	float: left;
+	margin: auto;
+}
+
+button.dest-button {
+	float: right;
+}
+
 div.submit {
+	clear: both;
 	width: 100%;
 	text-align: center;
 }
