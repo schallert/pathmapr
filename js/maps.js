@@ -53,63 +53,105 @@ function Counter(initial) {
     };
 }
 
-var locCount = new Counter(0);
+function pathMap(origin) {
+    this.markers = [];
+    this.origin = origin;
+}
 
+function mapMarker(location) {
+    this.location = location;
+}
 
-$("#user-location-form").submit(function (e) {
-    e.preventDefault();
+function createListener(counter, markerList) {
+    var index = counter.GetValue();
+    google.maps.event.addListener(markerList[index], 'click',
+        function() {
+            if (markerList[index].visible) {
+                counter.SetValue(index + 1);
+                markerList[index].setMap(null);
+                markerList[index].setVisible(false);
+                markerList[index + 1].setVisible(true);
+                createListener(counter, markerList);
+            }
+            else {
+                alert("went to else branch");
+            }
+        });
+}
 
-    var address = $(this).children()[0].value;
+pathMap.prototype.addAddress = function(address) {
+    var locCount = new Counter(0);
     var geoOptions = {
         "address": address,
-        "location": originLoc
+        "location": this.origin
     };
 
     var placesRequest = {
-        location : originLoc,
+        location : this.origin,
         radius : '500',
         query : address
     };
 
+    var self = this;
+
     service.textSearch(placesRequest, function(results, status) {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
             //associate each location with its distance from the origin
-            var distLocs = _.map(results, function(loc2) {
+            var distLocs = _.map(results, function(endLoc) {
                                                 return {
-                                                    geo: loc2,
-                                                    distance: calculateDistance(originLoc, loc2)};
-                                                });
+                                                    geo: endLoc,
+                                                    distance: calculateDistance(originLoc, endLoc)
+                                                };
+                                            });
 
             var sortedDist = _.sortBy(distLocs, function(loc) { return loc.distance; });
 
-            // console.log(sortedDist[locCount.GetValue]);
-            var location = sortedDist[locCount.GetValue()].geo.geometry.location;
+            var currMarkers = _.map(sortedDist, function(loc) {
+                                                    return new mapMarker(loc.geo.geometry.location);
+                                                });
 
-            markerList.push(location);
-            var marker = new google.maps.Marker({
-                map: map,
-                position: location
+
+            // console.log(sortedDist[locCount.GetValue]);
+            // var location = sortedDist[locCount.GetValue()].geo.geometry.location;
+
+
+
+            self.markers.push(
+                            {
+                                'location' : geoOptions.address,
+                                'currMarkers' : currMarkers
+                            });
+
+
+            // var currObj = _.find(self.markers, function(loc){ return loc.location === address; });
+            // console.log(currObj);
+            var markerObjs = _.map(currMarkers, function (marker) {
+                                                    return (new google.maps.Marker({
+                                                                map : map,
+                                                                position : marker.location,
+                                                                visible : false
+                                                            }));
+                                                 });
+
+            _.each(self.markers, function (results) {
+                bounds.extend(results.currMarkers[locCount.GetValue()].location);
             });
-            _.each(markerList, function (location) {
-                bounds.extend(location);
-            });
-            if (markerList.length != 1) {
+
+            if (self.markers.length != 1) {
                 map.fitBounds(bounds);
             }
 
-            google.maps.event.addListener(marker, 'click',
-                function() {
-                    locCount.SetValue(locCount.GetValue() + 1);
-                    marker.setMap(null);
-                    var newM = new google.maps.Marker({
-                        map : map,
-                        position : sortedDist[locCount.GetValue()].geo.geometry.location
-                    });
-                });
+            markerObjs[0].setVisible(true);
+            createListener(locCount, markerObjs);
+
+
         }
         else {
         alert("Geocode was not successful for the following reason: " + status);
       }
     });
+};
 
-});
+var p = new pathMap(originLoc);
+p.addAddress("CVS");
+    // var address = $(this).children()[0].value;
