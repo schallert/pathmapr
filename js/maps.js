@@ -153,5 +153,6 @@ pathMap.prototype.addAddress = function(address) {
 };
 
 var p = new pathMap(originLoc);
-p.addAddress("CVS");
+// p.addAddress("CVS");
+p.addAddress("Target");
     // var address = $(this).children()[0].value;
