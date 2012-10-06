@@ -81,6 +81,16 @@ function findNextMarker(currentDist, counter, markerObjs) {
 }
 
 function createListener(counter, markerObjs) {
+    console.log("Hello");
+    console.log(self.markers);
+    _.each(self.markers, function (results) {
+        bounds.extend(results.currMarkers[counter.GetValue()].location); //need to move to createListener
+    });
+
+    if (this.markers.length != 1) {
+        map.fitBounds(bounds);
+    }
+
     var index = counter.GetValue();
     google.maps.event.addListener(markerObjs[index].marker, 'click',
         function() {
@@ -159,13 +169,9 @@ pathMap.prototype.addAddress = function(address) {
 
             var locCount = new Counter(0);
 
-            _.each(self.markers, function (results) {
-                bounds.extend(results.currMarkers[locCount.GetValue()].location); //need to move to createListener
-            });
 
-            if (self.markers.length != 1) {
-                map.fitBounds(bounds);
-            }
+
+
 
 
             markerObjs[0].marker.setVisible(true);
