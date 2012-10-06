@@ -42,10 +42,14 @@ DestForm.prototype.appendNew = function () {
 
 DestForm.prototype.inputValues = function() {
 	var vals = _.map(this.inputs, function (input) {
-		return $(input).find("input").val();
+		var inputEl = $(input).find("input");
+		return {
+			"address": inputEl.val(),
+			"el": inputEl
+		}
 	});
 	return _.filter(vals, function (el) {
-		return el !== "";
+		return el.address !== "";
 	});
 };
 

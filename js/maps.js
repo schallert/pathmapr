@@ -95,7 +95,10 @@ pathMap.prototype.createListener = function(thiss, counter, markerObjs) {
         });
 };
 
-pathMap.prototype.addAddress = function(address) {
+pathMap.prototype.addAddress = function(addressIn) {
+
+    var address = addressIn.address;
+    var inputEl = addressIn.el;
 
     var geoOptions = {
         "address": address,
@@ -156,6 +159,22 @@ pathMap.prototype.addAddress = function(address) {
 
             // call the base case of a recursive listener markers
             pathMap.prototype.createListener(self, locCount, markerObjs);
+
+            var divList = $("<div/>");
+            divList.append($("<p/>", { text: "Results" } ));
+            subDiv = $("<div/>");
+            _.each(markerObjs, function (obj) {
+                var markerElem = $("<p/>", { text: "marker" });
+                markerElem.click(function (e) {
+                    _.each(markerObjs, function (o) { o.marker.setVisible(false) });
+                    obj.marker.setVisible(true);
+                });
+                subDiv.append(markerElem);
+            });
+            divList.append(subDiv);
+            divList.collapse();
+
+            $(inputEl[0].parentNode).append(divList);
 
 
         }
