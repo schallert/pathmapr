@@ -1,7 +1,9 @@
-var originLoc = new google.maps.LatLng(40.445563, -79.942387);
+//var originLoc = new google.maps.LatLng(38.237792, -85.572555); //Louisville,KY
+var originLoc = new google.maps.LatLng(40.443504,-79.941571); //CMU
+
 
 var mapOptions = {
-  center: originLoc,
+  center: window.originLoc,
   zoom: 16,
   mapTypeId: google.maps.MapTypeId.ROADMAP
 };
@@ -41,6 +43,7 @@ function calculateDistance(start, end) {
     return R * c;
 }
 
+// counter used to move through arrays of objects
 function Counter(initial) {
     this.val = initial;
 
@@ -62,9 +65,9 @@ function mapMarker(location, dist) {
     this.location = location;
     this.dist = dist;
 }
-
-var self = this;
-
+    
+/* used as a subroutine in createListener, it finds the next closest marker that is
+    not consider the same store */
 pathMap.prototype.findNextMarker = function(currentDist, counter, markerObjs) {
     var index = counter.GetValue();
     var nextMarker = markerObjs[index];
@@ -80,18 +83,18 @@ pathMap.prototype.findNextMarker = function(currentDist, counter, markerObjs) {
     else{
         return;
     }
-}
+};
 
+// recursively create a new listener each time that the previous one is clicked/activated
 pathMap.prototype.createListener = function(thiss, counter, markerObjs) {
     _.each(thiss.markers, function (results) {
         var justLocs = _.map(results.currMarkers, function(marker) {
-                                                    console.log(marker.location);
-                                                    return marker.location;
+                                                        return marker.location;
                                                   });
-        bounds.extend(justLocs[counter.GetValue()]); //need to move to createListener
+        bounds.extend(justLocs[counter.GetValue()]);
     });
 
-    if (thiss.markers.length != 0) {
+    if (thiss.markers.length !== 0) {
         map.fitBounds(bounds);
     }
 
@@ -107,6 +110,8 @@ pathMap.prototype.createListener = function(thiss, counter, markerObjs) {
                 pathMap.prototype.findNextMarker(markerObjs[index].distance, counter, markerObjs);
                 markerObjs[index].marker.setMap(null);
                 markerObjs[index].marker.setVisible(false);
+                /* counter is adjusted when calling findnextMarker to the index
+                    of the next closest marker based on the spec of findNextMarker */
                 markerObjs[counter.GetValue()].marker.setVisible(true);
                 pathMap.prototype.createListener(thiss, counter, markerObjs);
             }
@@ -115,7 +120,7 @@ pathMap.prototype.createListener = function(thiss, counter, markerObjs) {
             }
             return;
         });
-}
+};
 
 pathMap.prototype.addAddress = function(address) {
 
@@ -137,27 +142,29 @@ pathMap.prototype.addAddress = function(address) {
             var distLocs = _.map(results, function(endLoc) {
                                                 return {
                                                     geo: endLoc,
-                                                    distance: calculateDistance(originLoc, endLoc)
+                                                    distance: calculateDistance(window.originLoc, endLoc)
                                                 };
                                             });
 
+            //sort the location object by the distance from input location
             var sortedDist = _.sortBy(distLocs, function(loc) { return loc.distance; });
 
             var justDist = _.map(sortedDist, function(loc) {return loc.distance;});
 
-
+            //create a marker object based on the previously sorted location array
             var currMarkers = _.map(sortedDist, function(loc) {
                                                     return new mapMarker(loc.geo.geometry.location, loc.distance);
                                                 });
 
 
-
+            //add all the markers for the current address (string text)
             self.markers.push(
                             {
                                 'location' : geoOptions.address,
                                 'currMarkers' : currMarkers
                             });
 
+            //create google marker objs
             var markerObjs = _.map(currMarkers, function (marker) {
                                                     return {
                                                         marker : new google.maps.Marker({
@@ -170,22 +177,22 @@ pathMap.prototype.addAddress = function(address) {
                                                 });
 
 
-
+            //create a new counter to move through the current markers
             var locCount = new Counter(0);
             markerObjs[0].marker.setVisible(true);
 
-
+            // call the base case of a recursive listener markers
             pathMap.prototype.createListener(self, locCount, markerObjs);
 
 
         }
         else {
-        alert("Geocode was not successful for the following reason: " + status);
+            alert("Geocode was not successful for the following reason: " + status);
       }
     });
 };
 
-var p = new pathMap(originLoc);
+var p = new pathMap(window.originLoc);
 p.addAddress("CVS");
 p.addAddress("Target");
 // p.addAddress("PNC Park");
