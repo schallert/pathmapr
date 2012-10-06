@@ -54,8 +54,8 @@ function Counter(initial) {
 }
 
 function pathMap(origin) {
-    this.markers = [];
     this.origin = origin;
+    this.markers = [];
 }
 
 function mapMarker(location, dist) {
@@ -63,7 +63,9 @@ function mapMarker(location, dist) {
     this.dist = dist;
 }
 
-function findNextMarker(currentDist, counter, markerObjs) {
+var self = this;
+
+pathMap.prototype.findNextMarker = function(currentDist, counter, markerObjs) {
     var index = counter.GetValue();
     var nextMarker = markerObjs[index];
 
@@ -73,21 +75,23 @@ function findNextMarker(currentDist, counter, markerObjs) {
     }
     if (nextMarker.distance - currentDist <= 0.2) { //next marker is too close
         counter.SetValue(counter.GetValue() + 1);
-        findNextMarker(currentDist, counter, markerObjs);
+        pathMap.prototype.findNextMarker(currentDist, counter, markerObjs);
     }
     else{
         return;
     }
 }
 
-function createListener(counter, markerObjs) {
-    console.log("Hello");
-    console.log(self.markers);
-    _.each(self.markers, function (results) {
-        bounds.extend(results.currMarkers[counter.GetValue()].location); //need to move to createListener
+pathMap.prototype.createListener = function(thiss, counter, markerObjs) {
+    _.each(thiss.markers, function (results) {
+        var justLocs = _.map(results.currMarkers, function(marker) {
+                                                    console.log(marker.location);
+                                                    return marker.location;
+                                                  });
+        bounds.extend(justLocs[counter.GetValue()]); //need to move to createListener
     });
 
-    if (this.markers.length != 1) {
+    if (thiss.markers.length != 0) {
         map.fitBounds(bounds);
     }
 
@@ -100,11 +104,11 @@ function createListener(counter, markerObjs) {
             }
             if (markerObjs[index].marker.visible) {
                 counter.SetValue(index + 1);
-                findNextMarker(markerObjs[index].distance, counter, markerObjs);
+                pathMap.prototype.findNextMarker(markerObjs[index].distance, counter, markerObjs);
                 markerObjs[index].marker.setMap(null);
                 markerObjs[index].marker.setVisible(false);
                 markerObjs[counter.GetValue()].marker.setVisible(true);
-                createListener(counter, markerObjs);
+                pathMap.prototype.createListener(thiss, counter, markerObjs);
             }
             else {
                 alert("went to else branch");
@@ -168,14 +172,10 @@ pathMap.prototype.addAddress = function(address) {
 
 
             var locCount = new Counter(0);
-
-
-
-
-
-
             markerObjs[0].marker.setVisible(true);
-            createListener(locCount, markerObjs);
+
+
+            pathMap.prototype.createListener(self, locCount, markerObjs);
 
 
         }
@@ -187,5 +187,8 @@ pathMap.prototype.addAddress = function(address) {
 
 var p = new pathMap(originLoc);
 p.addAddress("CVS");
+p.addAddress("Target");
+// p.addAddress("PNC Park");
+// p.addAddress("carnegie Mellon University");
 // p.addAddress("Walmart");
     // var address = $(this).children()[0].value;
