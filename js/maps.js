@@ -58,29 +58,53 @@ function pathMap(origin) {
     this.origin = origin;
 }
 
-function mapMarker(location) {
+function mapMarker(location, dist) {
     this.location = location;
+    this.dist = dist;
 }
 
-function createListener(counter, markerList) {
+function findNextMarker(currentDist, counter, markerObjs) {
     var index = counter.GetValue();
-    google.maps.event.addListener(markerList[index], 'click',
+    var nextMarker = markerObjs[index];
+
+    if ((typeof nextMarker) === "undefined") {
+        alert("no more locations");
+        return;
+    }
+    if (nextMarker.distance - currentDist <= 0.2) { //next marker is too close
+        counter.SetValue(counter.GetValue() + 1);
+        findNextMarker(currentDist, counter, markerObjs);
+    }
+    else{
+        return;
+    }
+}
+
+function createListener(counter, markerObjs) {
+    var index = counter.GetValue();
+    google.maps.event.addListener(markerObjs[index].marker, 'click',
         function() {
-            if (markerList[index].visible) {
+            if (typeof markerObjs[index] === "undefined") {
+                alert("no more locations; tried to create listener");
+                return;
+            }
+            if (markerObjs[index].marker.visible) {
                 counter.SetValue(index + 1);
-                markerList[index].setMap(null);
-                markerList[index].setVisible(false);
-                markerList[index + 1].setVisible(true);
-                createListener(counter, markerList);
+                findNextMarker(markerObjs[index].distance, counter, markerObjs);
+                markerObjs[index].marker.setMap(null);
+                markerObjs[index].marker.setVisible(false);
+                markerObjs[counter.GetValue()].marker.setVisible(true);
+                createListener(counter, markerObjs);
             }
             else {
                 alert("went to else branch");
             }
+            return;
         });
 }
 
 pathMap.prototype.addAddress = function(address) {
-    var locCount = new Counter(0);
+
     var geoOptions = {
         "address": address,
         "location": this.origin
@@ -96,7 +120,6 @@ pathMap.prototype.addAddress = function(address) {
 
     service.textSearch(placesRequest, function(results, status) {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
-            //associate each location with its distance from the origin
             var distLocs = _.map(results, function(endLoc) {
                                                 return {
                                                     geo: endLoc,
@@ -106,13 +129,12 @@ pathMap.prototype.addAddress = function(address) {
 
             var sortedDist = _.sortBy(distLocs, function(loc) { return loc.distance; });
 
+            var justDist = _.map(sortedDist, function(loc) {return loc.distance;});
+
+
             var currMarkers = _.map(sortedDist, function(loc) {
-                                                    return new mapMarker(loc.geo.geometry.location);
+                                                    return new mapMarker(loc.geo.geometry.location, loc.distance);
                                                 });
-
-
-            // console.log(sortedDist[locCount.GetValue]);
-            // var location = sortedDist[locCount.GetValue()].geo.geometry.location;
 
 
 
@@ -122,26 +144,31 @@ pathMap.prototype.addAddress = function(address) {
                                 'currMarkers' : currMarkers
                             });
 
-
-            // var currObj = _.find(self.markers, function(loc){ return loc.location === address; });
-            // console.log(currObj);
             var markerObjs = _.map(currMarkers, function (marker) {
-                                                    return (new google.maps.Marker({
-                                                                map : map,
-                                                                position : marker.location,
-                                                                visible : false
-                                                            }));
-                                                 });
+                                                    return {
+                                                        marker : new google.maps.Marker({
+                                                                    map : map,
+                                                                    position : marker.location,
+                                                                    visible : false
+                                                                    }),
+                                                        distance : marker.dist
+                                                    };
+                                                });
+
+
+
+            var locCount = new Counter(0);
 
             _.each(self.markers, function (results) {
-                bounds.extend(results.currMarkers[locCount.GetValue()].location);
+                bounds.extend(results.currMarkers[locCount.GetValue()].location); //need to move to createListener
             });
 
             if (self.markers.length != 1) {
                 map.fitBounds(bounds);
             }
 
-            markerObjs[0].setVisible(true);
+
+            markerObjs[0].marker.setVisible(true);
             createListener(locCount, markerObjs);
 
 
@@ -153,6 +180,6 @@ pathMap.prototype.addAddress = function(address) {
 };
 
 var p = new pathMap(originLoc);
-// p.addAddress("CVS");
-p.addAddress("Target");
+p.addAddress("CVS");
+// p.addAddress("Walmart");
     // var address = $(this).children()[0].value;
