@@ -11,6 +11,13 @@ function DestInput (current) {
 		class: "dest-button",
 		text: "D"
 	});
+
+	var jButton = $(this.button);
+
+	jButton.click(function (e) {
+		e.preventDefault();
+		jButton.parent().remove();
+	});
 }
 
 DestInput.prototype.makeNode = function() {

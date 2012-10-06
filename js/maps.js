@@ -166,8 +166,8 @@ pathMap.prototype.addAddress = function(address) {
 };
 
 var p = new pathMap(window.originLoc);
-p.addAddress("CVS");
-p.addAddress("Target");
+// p.addAddress("CVS");
+// p.addAddress("Target");
 // p.addAddress("PNC Park");
 // p.addAddress("carnegie Mellon University");
 // p.addAddress("Walmart");
