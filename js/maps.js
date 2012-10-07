@@ -187,30 +187,30 @@ pathMap.prototype.addAddress = function(addressIn) {
             // call the base case of a recursive listener markers
             pathMap.prototype.createListener(self, locCount, markerObjs);
 
-            var divList = $("<div/>");
-            divList.append($("<a/>", { text: "+", class: "marker-expand" } ));
-            subDiv = $("<div/>");
-            var resultList = _.first(markerObjs, 3)
-            for (var i = 0; i < resultList.length; i ++) {
-                var obj = resultList[i];
-                var markerElem = $("<p/>", { text: "Option " + (i + 1), class: "marker-list" });
-                markerElem.click(function (e) {
-                    _.each(markerObjs, function (o) { o.marker.setVisible(false) });
-                    obj.marker.setVisible(true);
-                });
-                subDiv.append(markerElem);
-            }
-            divList.append(subDiv);
-            divList.collapse({
-                open: function() {
-                    this.slideDown(100);
-                },
-                close: function() {
-                    this.slideUp(100);
-                },
-            });
+            // var divList = $("<div/>");
+            // divList.append($("<a/>", { text: "+", class: "marker-expand" } ));
+            // subDiv = $("<div/>");
+            // var resultList = _.first(markerObjs, 3)
+            // for (var i = 0; i < resultList.length; i ++) {
+            //     var obj = resultList[i];
+            //     var markerElem = $("<p/>", { text: "Option " + (i + 1), class: "marker-list" });
+            //     markerElem.click(function (e) {
+            //         _.each(markerObjs, function (o) { o.marker.setVisible(false) });
+            //         obj.marker.setVisible(true);
+            //     });
+            //     subDiv.append(markerElem);
+            // }
+            // divList.append(subDiv);
+            // divList.collapse({
+            //     open: function() {
+            //         this.slideDown(100);
+            //     },
+            //     close: function() {
+            //         this.slideUp(100);
+            //     },
+            // });
 
-            $(inputEl[0].parentNode).append(divList);
+            // $(inputEl[0].parentNode).append(divList);
 
 
         }
