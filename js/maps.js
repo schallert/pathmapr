@@ -173,8 +173,6 @@ pathMap.prototype.addAddress = function(addressIn) {
 
             //add all the markers for the current address (string text)
 
-            console.log("current marker list: " + self.markers);
-
             //create a new counter to move through the current markers
             var locCount = new Counter(0);
             markerObjs[0].marker.setVisible(true);
@@ -227,7 +225,6 @@ pathMap.prototype.getWaypoints = function(locationList) {
         var current = _.find(loc.currMarkers, function(m) {
           return m.marker.visible;
       }).marker.position;
-        console.log(current);
         wayPts.push(
         {
             location : current,
@@ -242,7 +239,6 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
     //still need to add markers for the start and end points
     //they are currently custom markers
     var waypoints = pathMap.prototype.getWaypoints(this.markers);
-    console.log("waypoints: " + typeof waypoints);
     var dirRequest = {
         destination : dest,
         optimizeWaypoints : true,
@@ -285,7 +281,6 @@ var p = new pathMap(originLoc);
 
 $("#submit-input").click(function (e) {
     e.preventDefault();
-    console.log("foo");
     p.makeDirections("DRIVING", originLoc, originLoc);
 });
 // }
