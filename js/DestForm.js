@@ -1,3 +1,7 @@
+/*
+ * Group members: Dima Ivanyuk (divanyuk), Matt Schallert (mschalle)
+ */
+
 function DestForm () {
 	this.form = $("#dest-input-form");
 	this.inputs = [];

@@ -1,3 +1,7 @@
+/*
+ * Group members: Dima Ivanyuk (divanyuk), Matt Schallert (mschalle)
+ */
+
 function DestInput (current) {
 	this.class = "dest-input-group",
 	this.id = current ? "current-dest-input" : "",

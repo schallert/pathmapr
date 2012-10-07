@@ -1,3 +1,7 @@
+/*
+ * Group members: Dima Ivanyuk (divanyuk), Matt Schallert (mschalle)
+ */
+
 $("#dest-group").hide();
 
 $("#origin-input").focusin(function () {
