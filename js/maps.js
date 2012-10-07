@@ -147,7 +147,8 @@ pathMap.prototype.addAddress = function(address) {
                                                         marker : new google.maps.Marker({
                                                                     map : window.map,
                                                                     position : marker.location,
-                                                                    visible : false
+                                                                    visible : false,
+                                                                    title : geoOptions.address
                                                                     }),
                                                         distance : marker.dist
                                                     };
@@ -253,9 +254,10 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
 var p = new pathMap(window.originLoc);
 p.addAddress("CVS");
 p.addAddress("Target");
+p.addAddress("Panera Bread");
 var endLoc = new google.maps.LatLng(40.446693,-79.948045);
 setTimeout(function () {
-    p.makeDirections("DRIVING", window.originLoc, window.endLoc);
+    p.makeDirections("DRIVING", window.originLoc, window.originLoc);
 }, 2000);
 
 // p.addAddress("PNC Park");
