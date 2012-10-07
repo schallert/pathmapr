@@ -199,7 +199,6 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
     //still need to add markers for the start and end points
     //they are currently custom markers
     var waypoints = pathMap.prototype.getWaypoints(this.markers);
-    console.log("waypoints: " + typeof waypoints);
     var dirRequest = {
         destination : dest,
         optimizeWaypoints : true,
@@ -223,12 +222,13 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
 
 
 var p = new pathMap(window.originLoc);
-// p.addAddress("CVS");
-// p.addAddress("Target");
+p.addAddress("CVS");
+p.addAddress("Target");
 var endLoc = new google.maps.LatLng(40.446693,-79.948045);
 setTimeout(function () {
     p.makeDirections("DRIVING", window.originLoc, window.endLoc);
 }, 2000);
+
 // p.addAddress("PNC Park");
 // p.addAddress("carnegie Mellon University");
 // p.addAddress("Walmart");

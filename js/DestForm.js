@@ -28,11 +28,6 @@ DestForm.prototype.append = function(inputEl) {
 
 	this.inputs.push(inputEl);
 	this.form.children().eq(-1).before(inputEl);
-
-	var lastInsert = _.last(this.inputValues());
-	if (lastInsert !== undefined && lastInsert !== "") {
-		p.addAddress(lastInsert);
-	}
 };
 
 DestForm.prototype.appendNew = function () {
@@ -46,12 +41,5 @@ DestForm.prototype.inputValues = function() {
 	});
 	return _.filter(vals, function (el) {
 		return el !== "";
-	});
-};
-
-DestForm.prototype.mapInputs = function() {
-	var values = this.inputValues();
-	_.each(values, function (value) {
-		p.addAddress(value);
 	});
 };
