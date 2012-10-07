@@ -108,6 +108,7 @@ pathMap.prototype.createListener = function(thiss, counter, markerObjs) {
                 /* counter is adjusted when calling findnextMarker to the index
                 of the next closest marker based on the spec of findNextMarker */
                 markerObjs[counter.GetValue()].marker.setVisible(true);
+                pathMap.prototype.makeDirections(thiss, "DRIVING", window.originLoc, window.originLoc);              
                 pathMap.prototype.createListener(thiss, counter, markerObjs);
             }
             else {
@@ -169,8 +170,6 @@ pathMap.prototype.addAddress = function(addressIn) {
 
             //add all the markers for the current address (string text)
 
-            console.log("current marker list: " + self.markers);
-
             //create a new counter to move through the current markers
             var locCount = new Counter(0);
             markerObjs[0].marker.setVisible(true);
@@ -223,7 +222,6 @@ pathMap.prototype.getWaypoints = function(locationList) {
         var current = _.find(loc.currMarkers, function(m) {
           return m.marker.visible;
       }).marker.position;
-        console.log(current);
         wayPts.push(
         {
             location : current,
@@ -234,11 +232,10 @@ pathMap.prototype.getWaypoints = function(locationList) {
 };
 
 //waypoints should include origin (1st) and end destination (last)
-pathMap.prototype.makeDirections = function(travelBy, start, dest) {
+pathMap.prototype.makeDirections = function(thiss, travelBy, start, dest) {
     //still need to add markers for the start and end points
     //they are currently custom markers
-    var waypoints = pathMap.prototype.getWaypoints(this.markers);
-    console.log("waypoints: " + typeof waypoints);
+    var waypoints = pathMap.prototype.getWaypoints(thiss.markers);
     var dirRequest = {
         destination : dest,
         optimizeWaypoints : true,
@@ -263,7 +260,7 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
         });
     }
 
-    var self = this;
+    var self = thiss;
 
     directions.route(dirRequest, function(results, status) {
         if (status === google.maps.DirectionsStatus.OK) {
@@ -281,7 +278,6 @@ var p = new pathMap(originLoc);
 
 $("#submit-input").click(function (e) {
     e.preventDefault();
-    console.log("foo");
-    p.makeDirections("DRIVING", originLoc, originLoc);
+    p.makeDirections(p, "DRIVING", originLoc, originLoc);
 });
 // }
