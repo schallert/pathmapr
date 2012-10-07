@@ -1,3 +1,7 @@
+/*
+ * Group members: Dima Ivanyuk (divanyuk), Matt Schallert (mschalle)
+ */
+
 /* script using harvesine formula to calculate
     the greatest circle distance bt two points */
 

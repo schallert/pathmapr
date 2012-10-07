@@ -1,3 +1,7 @@
+/*
+ * Group members: Dima Ivanyuk (divanyuk), Matt Schallert (mschalle)
+ */
+
 // function doItAll (shiz) {
     //var originLoc = new google.maps.LatLng(38.237792, -85.572555); //Louisville,KY
 var originLoc = new google.maps.LatLng(40.443504,-79.941571); //CMU
