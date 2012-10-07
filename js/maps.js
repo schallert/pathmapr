@@ -8,10 +8,17 @@ var mapOptions = {
   mapTypeId: google.maps.MapTypeId.ROADMAP
 };
 
-var markerList = [];
 var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 var geocoder = new google.maps.Geocoder();
 var service = new google.maps.places.PlacesService(map);
+var directions = new google.maps.DirectionsService();
+
+var renderOptions = {
+    map : window.map,
+    suppressMarkers : true
+};
+
+var renderer = new google.maps.DirectionsRenderer(window.renderOptions);
 
 //  Create a new viewpoint bound
 var bounds = new google.maps.LatLngBounds();
@@ -38,6 +45,11 @@ function mapMarker(location, dist) {
     this.location = location;
     this.dist = dist;
 }
+
+function wayPoint(location, stopover) {
+    this.location = location;
+    this.stopover = stopover || true;
+}
     
 /* used as a subroutine in createListener, it finds the next closest marker that is
     not consider the same store */
@@ -61,14 +73,14 @@ pathMap.prototype.findNextMarker = function(currentDist, counter, markerObjs) {
 // recursively create a new listener each time that the previous one is clicked/activated
 pathMap.prototype.createListener = function(thiss, counter, markerObjs) {
     _.each(thiss.markers, function (results) {
-        var justLocs = _.map(results.currMarkers, function(marker) {
-                                                        return marker.location;
+        var justLocs = _.map(results.currMarkers, function(m) {
+                                                        return m.marker.position;
                                                   });
         bounds.extend(justLocs[counter.GetValue()]);
     });
 
     if (thiss.markers.length !== 0) {
-        map.fitBounds(bounds);
+        window.map.fitBounds(bounds);
     }
 
     var index = counter.GetValue();
@@ -113,7 +125,7 @@ pathMap.prototype.addAddress = function(addressIn) {
 
     var self = this;
 
-    service.textSearch(placesRequest, function(results, status) {
+    window.service.textSearch(placesRequest, function(results, status) {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
             var distLocs = _.map(results, function(endLoc) {
                                                 return {
@@ -132,19 +144,11 @@ pathMap.prototype.addAddress = function(addressIn) {
                                                     return new mapMarker(loc.geo.geometry.location, loc.distance);
                                                 });
 
-
-            //add all the markers for the current address (string text)
-            self.markers.push(
-                            {
-                                'location' : geoOptions.address,
-                                'currMarkers' : currMarkers
-                            });
-
             //create google marker objs
             var markerObjs = _.map(currMarkers, function (marker) {
                                                     return {
                                                         marker : new google.maps.Marker({
-                                                                    map : map,
+                                                                    map : window.map,
                                                                     position : marker.location,
                                                                     visible : false
                                                                     }),
@@ -152,10 +156,19 @@ pathMap.prototype.addAddress = function(addressIn) {
                                                     };
                                                 });
 
+            //add all the markers for the current address (string text)
+
+            console.log("current marker list: " + self.markers);
 
             //create a new counter to move through the current markers
             var locCount = new Counter(0);
             markerObjs[0].marker.setVisible(true);
+
+            self.markers.push(
+                            {
+                                'location' : geoOptions.address,
+                                'currMarkers' : markerObjs
+                            });
 
             // call the base case of a recursive listener markers
             pathMap.prototype.createListener(self, locCount, markerObjs);
@@ -184,9 +197,57 @@ pathMap.prototype.addAddress = function(addressIn) {
     });
 };
 
+pathMap.prototype.getWaypoints = function(locationList) {
+    var wayPts = [];
+    _.each(locationList, function(loc) {
+                            var current = _.find(loc.currMarkers, function(m) {
+                                                                      return m.marker.visible;
+                                                                  }).marker.position;
+                            console.log(current);
+                            wayPts.push(
+                            {
+                                location : current,
+                                stopover : true
+                            });
+                         });
+    return wayPts;
+};
+
+//waypoints should include origin (1st) and end destination (last)
+pathMap.prototype.makeDirections = function(travelBy, start, dest) {
+    //still need to add markers for the start and end points
+    //they are currently custom markers
+    var waypoints = pathMap.prototype.getWaypoints(this.markers);
+    console.log("waypoints: " + typeof waypoints);
+    var dirRequest = {
+        destination : dest,
+        optimizeWaypoints : true,
+        origin : start,
+        travelMode : travelBy,
+        waypoints : waypoints
+    };
+
+    var self = this;
+
+    window.directions.route(dirRequest, function(results, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+            window.renderer.setDirections(results);
+        }
+        else {
+            alert("directions not successful for the following reason: " + status);
+        }
+    });
+
+};
+
+
 var p = new pathMap(window.originLoc);
 // p.addAddress("CVS");
 // p.addAddress("Target");
+var endLoc = new google.maps.LatLng(40.446693,-79.948045);
+setTimeout(function () {
+    p.makeDirections("DRIVING", window.originLoc, window.endLoc);
+}, 2000);
 // p.addAddress("PNC Park");
 // p.addAddress("carnegie Mellon University");
 // p.addAddress("Walmart");
