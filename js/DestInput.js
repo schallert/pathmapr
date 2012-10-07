@@ -26,7 +26,7 @@ DestInput.prototype.makeNode = function() {
 		id: this.id
 	});
 	div.append(this.inputEl);
-	div.append(this.button);
+	// div.append(this.button);
 	return div[0];
 };
 
