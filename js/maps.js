@@ -18,7 +18,7 @@ var renderOptions = {
     suppressMarkers : true
 };
 
-var renderer = new google.maps.DirectionsRenderer(window.renderOptions);
+var renderer = new google.maps.DirectionsRenderer(window.renderOptions); //main renderer
 
 //  Create a new viewpoint bound
 var bounds = new google.maps.LatLngBounds();
@@ -211,6 +211,24 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
 
     window.directions.route(dirRequest, function(results, status) {
         if (status === google.maps.DirectionsStatus.OK) {
+          /*  if (travelBy === "WALKING") {
+                var legCount = new Counter(0);
+                var legStartIndex = legCount;
+                //check if any leg of the walk is greater than 0.75
+                _.each(results[0].legs, function(leg) {
+                                            var distance = calculateDistance(leg.start_location, leg.end_location);
+                                            if (distance > 0.75) {
+                                                //render the directions up to this point
+                                                var wRange = _.range(legStartIndex, legCount.GetValue());
+                                                var newWayPoints = _.map(wRange, function(i) {
+                                                                                    return waypoints[i];
+                                                }); 
+                                                pathMap.prototype.makeDirections(travelBy, )
+                                                rend.setDirections
+
+                                            }
+                }
+            } */
             window.renderer.setDirections(results);
         }
         else {
