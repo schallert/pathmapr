@@ -246,6 +246,22 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
         waypoints : waypoints
     };
 
+    var startMarker = new google.maps.Marker({
+                            map : window.map,
+                            position : start,
+                            icon : 'images/home.png',
+                            visible : true
+                        });
+
+    if (start !== dest) {
+        var endMarker = new google.maps.Marker({
+                             map : window.map,
+                             position : dest,
+                             icon : 'images/blue-dot.png',
+                             visible : true
+        });
+    }
+
     var self = this;
 
     directions.route(dirRequest, function(results, status) {
@@ -261,11 +277,10 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
 
 
 var p = new pathMap(originLoc);
-var endLoc = new google.maps.LatLng(40.446693,-79.948045);
 
 $("#submit-input").click(function (e) {
     e.preventDefault();
     console.log("foo");
-    p.makeDirections("DRIVING", originLoc, endLoc);
+    p.makeDirections("DRIVING", originLoc, originLoc);
 });
 // }
