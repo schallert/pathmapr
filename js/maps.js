@@ -160,7 +160,8 @@ pathMap.prototype.addAddress = function(addressIn) {
                     marker : new google.maps.Marker({
                         map : map,
                         position : marker.location,
-                        visible : false
+                        visible : false,
+                        title : geoOptions.address
                     }),
                     distance : marker.dist
                 };
