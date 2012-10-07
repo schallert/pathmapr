@@ -41,7 +41,7 @@ input.user-input {
 }
 
 input.dest-input {
-	float: left;
+	/*float: left;*/
 	margin: auto;
 }
 
