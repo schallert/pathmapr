@@ -235,6 +235,13 @@ pathMap.prototype.getWaypoints = function(locationList) {
     return wayPts;
 };
 
+pathMap.prototype.totalTripTime = function(results) {
+    var times = _.map(results.routes[0].legs, function(leg) {
+                                        return leg.duration.value;
+    });
+    return _.reduce(times, function(a,b) { return a + b;});
+}
+
 //waypoints should include origin (1st) and end destination (last)
 pathMap.prototype.makeDirections = function(thiss, travelBy, start, dest) {
     //still need to add markers for the start and end points
@@ -269,6 +276,7 @@ pathMap.prototype.makeDirections = function(thiss, travelBy, start, dest) {
     directions.route(dirRequest, function(results, status) {
         if (status === google.maps.DirectionsStatus.OK) {
             renderer.setDirections(results);
+            var totTime = pathMap.prototype.totalTripTime(results)/60.0;
         }
         else {
             alert("directions not successful for the following reason: " + status);
