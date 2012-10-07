@@ -174,18 +174,27 @@ pathMap.prototype.addAddress = function(addressIn) {
             pathMap.prototype.createListener(self, locCount, markerObjs);
 
             var divList = $("<div/>");
-            divList.append($("<p/>", { text: "Results" } ));
+            divList.append($("<a/>", { text: "+", class: "marker-expand" } ));
             subDiv = $("<div/>");
-            _.each(markerObjs, function (obj) {
-                var markerElem = $("<p/>", { text: "marker" });
+            var resultList = _.first(markerObjs, 3)
+            for (var i = 0; i < resultList.length; i ++) {
+                var obj = resultList[i];
+                var markerElem = $("<p/>", { text: "Option " + (i + 1), class: "marker-list" });
                 markerElem.click(function (e) {
                     _.each(markerObjs, function (o) { o.marker.setVisible(false) });
                     obj.marker.setVisible(true);
                 });
                 subDiv.append(markerElem);
-            });
+            }
             divList.append(subDiv);
-            divList.collapse();
+            divList.collapse({
+                open: function() {
+                    this.slideDown(100);
+                },
+                close: function() {
+                    this.slideUp(100);
+                },
+            });
 
             $(inputEl[0].parentNode).append(divList);
 
@@ -242,13 +251,10 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
 
 
 var p = new pathMap(window.originLoc);
-// p.addAddress("CVS");
-// p.addAddress("Target");
 var endLoc = new google.maps.LatLng(40.446693,-79.948045);
-setTimeout(function () {
+
+$("#submit-input").click(function (e) {
+    e.preventDefault();
+    console.log("foo");
     p.makeDirections("DRIVING", window.originLoc, window.endLoc);
-}, 2000);
-// p.addAddress("PNC Park");
-// p.addAddress("carnegie Mellon University");
-// p.addAddress("Walmart");
-    // var address = $(this).children()[0].value;
+});

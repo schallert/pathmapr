@@ -45,6 +45,14 @@ input.dest-input {
 	margin: auto;
 }
 
+.marker-expand {
+	margin-left: 35px;
+}
+
+.marker-list {
+	margin-left: 40px;
+}
+
 button.dest-button {
 	float: right;
 }
