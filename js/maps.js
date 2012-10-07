@@ -153,10 +153,6 @@ pathMap.prototype.addAddress = function(address) {
                                                     };
                                                 });
 
-            //add all the markers for the current address (string text)
-
-            console.log("current marker list: " + self.markers);
-
             //create a new counter to move through the current markers
             var locCount = new Counter(0);
             markerObjs[0].marker.setVisible(true);
@@ -184,7 +180,6 @@ pathMap.prototype.getWaypoints = function(locationList) {
                             var current = _.find(loc.currMarkers, function(m) {
                                                                       return m.marker.visible;
                                                                   }).marker.position;
-                            console.log(current);
                             wayPts.push(
                             {
                                 location : current,
@@ -206,6 +201,22 @@ pathMap.prototype.makeDirections = function(travelBy, start, dest) {
         travelMode : travelBy,
         waypoints : waypoints
     };
+
+    var startMarker = new google.maps.Marker({
+                            map : window.map,
+                            position : start,
+                            icon : 'images/home.png',
+                            visible : true
+                        });
+
+    if (start !== dest) {
+        var endMarker = new google.maps.Marker({
+                             map : window.map,
+                             position : dest,
+                             icon : 'images/blue-dot.png',
+                             visible : true
+        });
+    }
 
     var self = this;
 
