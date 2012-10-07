@@ -24,6 +24,6 @@ Requirements Met
 
 Robust app - we believe our app is useful, and in our use it has worked well. For now, it is specific the the CMU / Pittsburgh area, but we hope to expand its use case for a later unit or term project
 
-User interface - we use appealing colors / patterns, and in our testing among random friends, they have found the interface to be intuitive
+User interface - we use appealing colors / patterns, and in our testing among random friends, they have found the interface to be intuitive. Another note: when you click the markers you lay out, it will move the marker to the next possible location from the search list. Same if you click the dropdown below your location input.
 
 Code style - our code is formatted properly. We realized late in the game that our editors were set to different spacing widths (2 spaces, 4 spaces), so that threw things off a bit, but overall it looks fine
